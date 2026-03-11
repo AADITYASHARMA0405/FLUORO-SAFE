@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FluoroSafe — Fluoride Prediction & Water Safety</title>
+    <meta name="description" content="Predict fluoride levels in drinking water. WHO safety guidelines, health effects, and precautions for fluoride contamination.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Animated Water Background -->
+    <canvas id="water-canvas"></canvas>
+
+    <!-- Floating Fluoride Ions -->
+    <div class="fluoride-ions" id="fluoride-ions">
+        <div class="ion ion-1">F<sup>−</sup></div>
+        <div class="ion ion-2">F<sup>−</sup></div>
+        <div class="ion ion-3">F<sup>−</sup></div>
+        <div class="ion ion-4">F<sup>−</sup></div>
+        <div class="ion ion-5">F<sup>−</sup></div>
+        <div class="ion ion-6">F<sup>−</sup></div>
+        <div class="ion ion-7">F<sup>−</sup></div>
+        <div class="ion ion-8">F<sup>−</sup></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <path d="M20 3L6 12v10c0 8.5 6 15.5 14 18 8-2.5 14-9.5 14-18V12L20 3z" fill="url(#shield-grad)" opacity="0.85"/>
+                    <path d="M20 14c0 0-5 5-5 10a5 5 0 0010 0c0-5-5-10-5-10z" fill="#fff" opacity="0.5"/>
+                    <defs>
+                        <linearGradient id="shield-grad" x1="6" y1="3" x2="34" y2="40">
+                            <stop offset="0%" stop-color="#4da8da"/>
+                            <stop offset="100%" stop-color="#5cb8b2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="brand-text">FluoroSafe</span>
+        </div>
+        <div class="nav-links">
+            <a href="#hero" class="nav-link">Home</a>
+            <a href="#predict" class="nav-link">Predict</a>
+            <a href="#who-limits" class="nav-link">WHO Limits</a>
+            <a href="#health-effects" class="nav-link">Health Effects</a>
+            <a href="#precautions" class="nav-link">Precautions</a>
+        </div>
+        <div class="nav-hamburger" id="nav-hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- ════════════════ HERO ════════════════ -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge animate-fade-in">
+                <span class="sdg-badge">SDG 6</span>
+                Clean Water & Sanitation
+            </div>
+            <h1 class="hero-title animate-fade-in-up">
+                Protecting Global
+                <span class="gradient-text">Water Quality</span>
+            </h1>
+            <p class="hero-subtitle animate-fade-in-up delay-1">
+                Predicting fluoride contamination in drinking water to protect 
+                communities from harmful exposure. Aligned with <strong>UN SDG 6</strong> — 
+                ensuring safe, clean water for all.
+            </p>
+            <div class="hero-actions animate-fade-in-up delay-2">
+                <a href="#predict" class="btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c0 0-8 8-8 16a8 8 0 0016 0c0-8-8-16-8-16z"/></svg>
+                    Start Prediction
+                </a>
+                <a href="#who-limits" class="btn-secondary">
+                    Learn About Fluoride
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="hero-visual animate-fade-in delay-2">
+            <div class="molecule-container">
+                <div class="molecule">
+                    <div class="atom atom-center">F</div>
+                    <div class="electron-ring ring-1"><div class="electron"></div></div>
+                    <div class="electron-ring ring-2"><div class="electron"></div></div>
+                    <div class="electron-ring ring-3"><div class="electron"></div></div>
+                </div>
+                <div class="molecule-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════ PREDICTION ════════════════ -->
+    <section class="section predict-section" id="predict">
+        <div class="section-header animate-on-scroll">
+            <div class="section-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <h2 class="section-title">Predict Fluoride Level</h2>
+            <p class="section-subtitle">Enter water quality parameters to predict fluoride concentration</p>
+        </div>
+
+        <div class="predict-grid">
+            <!-- Input Panel -->
+            <div class="panel input-panel glass-card animate-on-scroll">
+                <div class="panel-header">
+                    <h3>Sensor Input</h3>
+                    <div class="live-dot"><span></span> Real-time</div>
+                </div>
+
+                <form id="predict-form">
+                    <div class="form-grid">
+                        <div class="field" id="field-ph">
+                            <div class="field-header">
+                                <span class="field-icon ph-icon">pH</span>
+                                <label for="ph">pH Value</label>
+                            </div>
+                            <input type="number" id="ph" step="0.01" min="0" max="14" required placeholder="e.g., 7.02">
+                            <div class="field-range">
+                                <div class="range-bar"><div class="range-fill" id="ph-range" style="width:50%"></div></div>
+                                <div class="range-labels"><span>0</span><span>7</span><span>14</span></div>
+                            </div>
+                        </div>
+
+                        <div class="field" id="field-ec">
+                            <div class="field-header">
+                                <span class="field-icon ec-icon">EC</span>
+                                <label for="ec">EC (µS/cm)</label>
+                            </div>
+                            <input type="number" id="ec" step="0.1" min="0" required placeholder="e.g., 508.8">
+                            <div class="field-range">
+                                <div class="range-bar"><div class="range-fill" id="ec-range" style="width:30%"></div></div>
+                                <div class="range-labels"><span>0</span><span>500</span><span>1500</span></div>
+                            </div>
+                        </div>
+
+                        <div class="field" id="field-temp">
+                            <div class="field-header">
+                                <span class="field-icon temp-icon">°C</span>
+                                <label for="temperature">Temperature</label>
+                            </div>
+                            <input type="number" id="temperature" step="0.1" min="0" max="50" required placeholder="e.g., 24.8">
+                            <div class="field-range">
+                                <div class="range-bar"><div class="range-fill" id="temp-range" style="width:50%"></div></div>
+                                <div class="range-labels"><span>10°</span><span>25°</span><span>40°</span></div>
+                            </div>
+                        </div>
+
+                        <div class="field" id="field-hardness">
+                            <div class="field-header">
+                                <span class="field-icon hard-icon">H₂O</span>
+                                <label for="hardness">Hardness (mg/L)</label>
+                            </div>
+                            <input type="number" id="hardness" step="0.1" min="0" required placeholder="e.g., 282.2">
+                            <div class="field-range">
+                                <div class="range-bar"><div class="range-fill" id="hard-range" style="width:30%"></div></div>
+                                <div class="range-labels"><span>0</span><span>300</span><span>600+</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="predict-btn" id="predict-btn">
+                        <span class="btn-text">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            Predict Fluoride
+                        </span>
+                        <span class="btn-loader"><span></span><span></span><span></span></span>
+                    </button>
+                </form>
+
+                <div class="presets">
+                    <span class="presets-label">Quick samples:</span>
+                    <button class="preset-chip" data-ph="7.02" data-ec="508.8" data-temp="24.8" data-hardness="282.2">
+                        <span class="chip-dot safe"></span>Normal Water
+                    </button>
+                    <button class="preset-chip" data-ph="7.81" data-ec="867.4" data-temp="25.9" data-hardness="543">
+                        <span class="chip-dot danger"></span>High Fluoride
+                    </button>
+                    <button class="preset-chip" data-ph="7.45" data-ec="650" data-temp="25" data-hardness="420">
+                        <span class="chip-dot warning"></span>Borderline
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Panel -->
+            <div class="panel result-panel glass-card animate-on-scroll" id="result-card">
+                <div class="result-placeholder" id="result-placeholder">
+                    <div class="placeholder-anim">
+                        <div class="water-beaker">
+                            <div class="beaker-body">
+                                <div class="beaker-water">
+                                    <div class="water-wave"></div>
+                                </div>
+                            </div>
+                            <div class="beaker-scale">
+                                <span>2.0</span><span>1.5</span><span>1.0</span><span>0.5</span><span>0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="placeholder-text">Enter sensor values to predict<br>fluoride concentration</p>
+                </div>
+
+                <div class="result-content" id="result-content" style="display:none;">
+                    <div class="result-header">
+                        <h3>Prediction Result</h3>
+                        <span class="result-time" id="result-timestamp"></span>
+                    </div>
+
+                    <!-- Water Level Gauge -->
+                    <div class="water-gauge" id="water-gauge">
+                        <div class="gauge-tube">
+                            <div class="gauge-water" id="gauge-water">
+                                <div class="gauge-wave"></div>
+                            </div>
+                            <div class="gauge-markers">
+                                <div class="marker" style="bottom:100%"><span>2.0</span></div>
+                                <div class="marker marker-bis" style="bottom:75%"><span>1.5</span><em>BIS Max</em></div>
+                                <div class="marker marker-who" style="bottom:50%"><span>1.0</span><em>WHO Limit</em></div>
+                                <div class="marker" style="bottom:25%"><span>0.5</span></div>
+                                <div class="marker" style="bottom:0%"><span>0</span></div>
+                            </div>
+                        </div>
+                        <div class="gauge-value-box">
+                            <span class="gauge-number" id="gauge-value">0.00</span>
+                            <span class="gauge-label">mg/L Fluoride</span>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="status-badge" id="status-badge">
+                        <span class="status-dot"></span>
+                        <span class="status-text" id="status-text">--</span>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="result-details">
+                        <div class="detail"><span>WHO Limit</span><span>1.5 mg/L</span></div>
+                        <div class="detail"><span>BIS Limit</span><span>1.0 mg/L</span></div>
+                        <div class="detail"><span>Acceptable (BIS)</span><span>&le; 1.0 mg/L</span></div>
+                        <div class="detail"><span>Permissible (BIS)</span><span>&le; 1.5 mg/L</span></div>
+                    </div>
+
+                    <!-- Remediation Alert (shown when fluoride exceeds) -->
+                    <div class="remediation-alert" id="remediation-alert" style="display:none;">
+                        <div class="alert-header">
+                            <span class="alert-icon">⚠️</span>
+                            <h4 id="alert-title">Action Required</h4>
+                        </div>
+                        <p id="alert-desc">Your water fluoride level is above safe limits. Take these steps:</p>
+                        <ul class="alert-steps" id="alert-steps">
+                            <li>🚰 <strong>Stop drinking</strong> this water directly until treated</li>
+                            <li>🔬 <strong>Install an RO filter</strong> or activated alumina defluoridation unit</li>
+                            <li>🌧️ <strong>Use rainwater</strong> as an alternative fluoride-free source</li>
+                            <li>🥛 <strong>Increase calcium intake</strong> (milk, dairy) to reduce fluoride absorption</li>
+                            <li>🍋 <strong>Eat Vitamin C-rich foods</strong> (citrus, amla) to promote fluoride excretion</li>
+                            <li>🏥 <strong>Get tested</strong> for dental/skeletal fluorosis if exposed long-term</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════ WHO LIMITS ════════════════ -->
+    <section class="section who-section" id="who-limits">
+        <div class="section-header animate-on-scroll">
+            <div class="section-icon warning-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            </div>
+            <h2 class="section-title">WHO & BIS Safety Limits</h2>
+            <p class="section-subtitle">International and national standards for fluoride in drinking water</p>
+        </div>
+
+        <div class="limits-content animate-on-scroll">
+            <!-- Visual Fluoride Scale -->
+            <div class="fluoride-scale">
+                <div class="scale-bar-container">
+                    <div class="scale-bar">
+                        <div class="scale-zone safe-zone" style="width:33.3%">
+                            <span class="zone-label">SAFE</span>
+                            <span class="zone-range">0 - 1.0 mg/L</span>
+                        </div>
+                        <div class="scale-zone caution-zone" style="width:16.7%">
+                            <span class="zone-label">CAUTION</span>
+                            <span class="zone-range">1.0 - 1.5</span>
+                        </div>
+                        <div class="scale-zone danger-zone" style="width:50%">
+                            <span class="zone-label">DANGEROUS</span>
+                            <span class="zone-range">&gt; 1.5 mg/L</span>
+                        </div>
+                    </div>
+                    <div class="scale-pointers">
+                        <div class="pointer bis-pointer" style="left:33.3%">
+                            <div class="pointer-line"></div>
+                            <div class="pointer-label">BIS Limit<br><strong>1.0 mg/L</strong></div>
+                        </div>
+                        <div class="pointer who-pointer" style="left:50%">
+                            <div class="pointer-line"></div>
+                            <div class="pointer-label">WHO Limit<br><strong>1.5 mg/L</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Limit Cards -->
+            <div class="limits-grid">
+                <div class="limit-card glass-card">
+                    <div class="limit-org">
+                        <div class="org-logo who-logo">WHO</div>
+                        <div>
+                            <h4>World Health Organization</h4>
+                            <span class="org-tag">International Standard</span>
+                        </div>
+                    </div>
+                    <div class="limit-value-display">
+                        <span class="limit-number">1.5</span>
+                        <span class="limit-unit">mg/L</span>
+                    </div>
+                    <p class="limit-desc">WHO Guidelines for Drinking-water Quality recommend fluoride should not exceed <strong>1.5 mg/L</strong>. Concentrations above this cause significant risk of dental and skeletal fluorosis.</p>
+                </div>
+
+                <div class="limit-card glass-card">
+                    <div class="limit-org">
+                        <div class="org-logo bis-logo">BIS</div>
+                        <div>
+                            <h4>Bureau of Indian Standards</h4>
+                            <span class="org-tag">IS 10500:2012</span>
+                        </div>
+                    </div>
+                    <div class="limit-value-display">
+                        <span class="limit-number">1.0</span>
+                        <span class="limit-unit">mg/L</span>
+                    </div>
+                    <p class="limit-desc">BIS acceptable limit for fluoride is <strong>1.0 mg/L</strong> with a maximum permissible limit of <strong>1.5 mg/L</strong> in the absence of an alternate drinking water source.</p>
+                </div>
+
+                <div class="limit-card glass-card">
+                    <div class="limit-org">
+                        <div class="org-logo sdg-logo">SDG</div>
+                        <div>
+                            <h4>UN SDG Goal 6</h4>
+                            <span class="org-tag">Clean Water & Sanitation</span>
+                        </div>
+                    </div>
+                    <div class="limit-value-display">
+                        <span class="limit-number goal-text">6</span>
+                        <span class="limit-unit">Goal</span>
+                    </div>
+                    <p class="limit-desc">Ensure availability and sustainable management of water and sanitation for all. Target 6.1 aims for <strong>universal access</strong> to safe and affordable drinking water by 2030.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fluoride Distribution Chart -->
+        <div class="chart-container animate-on-scroll">
+            <h3 class="chart-title">Fluoride Level Distribution</h3>
+            <p class="chart-subtitle">Typical distribution of fluoride levels in drinking water sources</p>
+            <div class="chart-wrapper">
+                <canvas id="fluoride-distribution-chart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════ HEALTH EFFECTS ════════════════ -->
+    <section class="section effects-section" id="health-effects">
+        <div class="section-header animate-on-scroll">
+            <div class="section-icon danger-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 110 20 10 10 0 010-20zM12 8v4M12 16h.01"/></svg>
+            </div>
+            <h2 class="section-title">Health Effects of Excess Fluoride</h2>
+            <p class="section-subtitle">Understanding the dangers of fluoride contamination in water</p>
+        </div>
+
+        <div class="effects-grid animate-on-scroll">
+            <div class="effect-card glass-card">
+                <div class="effect-icon dental">
+                    <span class="effect-emoji">🦷</span>
+                </div>
+                <h4>Dental Fluorosis</h4>
+                <div class="effect-severity">
+                    <span class="severity-bar"><span style="width:60%"></span></span>
+                    <span class="severity-label">&gt; 1.5 mg/L</span>
+                </div>
+                <p>Causes white spots, pitting, and brown staining on tooth enamel. Affects children during tooth development significantly.</p>
+            </div>
+
+            <div class="effect-card glass-card">
+                <div class="effect-icon skeletal">
+                    <span class="effect-emoji">🦴</span>
+                </div>
+                <h4>Skeletal Fluorosis</h4>
+                <div class="effect-severity">
+                    <span class="severity-bar"><span style="width:85%"></span></span>
+                    <span class="severity-label">&gt; 4 mg/L</span>
+                </div>
+                <p>Chronic exposure leads to joint pain, stiffness, bone deformities, and calcification of ligaments. Can be crippling and irreversible.</p>
+            </div>
+
+            <div class="effect-card glass-card">
+                <div class="effect-icon neuro">
+                    <span class="effect-emoji">🧠</span>
+                </div>
+                <h4>Neurological Effects</h4>
+                <div class="effect-severity">
+                    <span class="severity-bar"><span style="width:70%"></span></span>
+                    <span class="severity-label">&gt; 2 mg/L</span>
+                </div>
+                <p>Studies link excess fluoride to reduced IQ in children, cognitive impairment, memory problems, and neurodevelopmental issues.</p>
+            </div>
+
+            <div class="effect-card glass-card">
+                <div class="effect-icon kidney">
+                    <span class="effect-emoji">🫘</span>
+                </div>
+                <h4>Kidney Damage</h4>
+                <div class="effect-severity">
+                    <span class="severity-bar"><span style="width:75%"></span></span>
+                    <span class="severity-label">&gt; 3 mg/L</span>
+                </div>
+                <p>High fluoride accumulation damages kidney tissue, impairs renal function, and increases risk of kidney stones over long-term exposure.</p>
+            </div>
+
+            <div class="effect-card glass-card">
+                <div class="effect-icon thyroid">
+                    <span class="effect-emoji">🦋</span>
+                </div>
+                <h4>Thyroid Disruption</h4>
+                <div class="effect-severity">
+                    <span class="severity-bar"><span style="width:55%"></span></span>
+                    <span class="severity-label">&gt; 2 mg/L</span>
+                </div>
+                <p>Fluoride can suppress thyroid function, leading to hypothyroidism. Affects metabolism, energy levels, and hormonal balance.</p>
+            </div>
+
+            <div class="effect-card glass-card">
+                <div class="effect-icon reproductive">
+                    <span class="effect-emoji">🧬</span>
+                </div>
+                <h4>Reproductive Issues</h4>
+                <div class="effect-severity">
+                    <span class="severity-bar"><span style="width:50%"></span></span>
+                    <span class="severity-label">&gt; 3 mg/L</span>
+                </div>
+                <p>Research indicates high fluoride can affect fertility, hormone levels, and reproductive health in both males and females.</p>
+            </div>
+        </div>
+
+        <!-- Effects by Concentration Chart -->
+        <div class="chart-container animate-on-scroll">
+            <h3 class="chart-title">Health Risk vs Fluoride Concentration</h3>
+            <p class="chart-subtitle">How health risks escalate with increasing fluoride levels</p>
+            <div class="chart-wrapper">
+                <canvas id="health-risk-chart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════ PRECAUTIONS ════════════════ -->
+    <section class="section precautions-section" id="precautions">
+        <div class="section-header animate-on-scroll">
+            <div class="section-icon safe-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h2 class="section-title">Safety Precautions</h2>
+            <p class="section-subtitle">Measures to protect yourself from fluoride contamination</p>
+        </div>
+
+        <div class="precautions-grid animate-on-scroll">
+            <div class="precaution-card glass-card">
+                <div class="precaution-number">01</div>
+                <h4>Regular Water Testing</h4>
+                <p>Test your water supply regularly for fluoride concentration using certified labs or IoT sensors. Monitor seasonal variations in groundwater quality.</p>
+            </div>
+            <div class="precaution-card glass-card">
+                <div class="precaution-number">02</div>
+                <h4>Use Defluoridation Filters</h4>
+                <p>Install activated alumina or reverse osmosis (RO) filters specifically designed to remove fluoride. Ensure regular maintenance and filter replacement.</p>
+            </div>
+            <div class="precaution-card glass-card">
+                <div class="precaution-number">03</div>
+                <h4>Avoid Groundwater in High-F Areas</h4>
+                <p>In known fluoride-endemic regions, prefer treated municipal water supply over borewells and untested groundwater sources for drinking and cooking.</p>
+            </div>
+            <div class="precaution-card glass-card">
+                <div class="precaution-number">04</div>
+                <h4>Calcium & Vitamin C Intake</h4>
+                <p>Increase dietary calcium (milk, cheese) and Vitamin C (citrus fruits) which help mitigate fluoride absorption and promote excretion.</p>
+            </div>
+            <div class="precaution-card glass-card">
+                <div class="precaution-number">05</div>
+                <h4>Rainwater Harvesting</h4>
+                <p>Rainwater is naturally fluoride-free. Implement rainwater harvesting systems as an alternative safe water source for drinking purposes.</p>
+            </div>
+            <div class="precaution-card glass-card">
+                <div class="precaution-number">06</div>
+                <h4>Community Awareness</h4>
+                <p>Educate communities about fluoride risks, advocate for centralized defluoridation plants, and support government initiatives for safe water supply.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════ FOOTER ════════════════ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="brand-text">FluoroSafe</span>
+                <p>Protecting global water quality through AI-powered fluoride monitoring</p>
+            </div>
+            <div class="footer-links">
+                <h5>Quick Links</h5>
+                <a href="#predict">Predict Fluoride</a>
+                <a href="#who-limits">WHO Limits</a>
+                <a href="#health-effects">Health Effects</a>
+                <a href="#precautions">Precautions</a>
+            </div>
+            <div class="footer-sdg">
+                <h5>Aligned With</h5>
+                <div class="sdg-card">
+                    <span class="sdg-number">6</span>
+                    <span>Clean Water<br>& Sanitation</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>FluoroSafe &mdash; Fluoride Prediction & Water Safety &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
