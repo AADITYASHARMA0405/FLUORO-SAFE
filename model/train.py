@@ -36,7 +36,7 @@ from tensorflow.keras.optimizers import Adam
 
 # -- Paths ----------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(BASE_DIR, "Bengaluru_Fluoride_SensorData_500 (3).xlsx")
+DATA_PATH = os.path.join(BASE_DIR, "data", "Bengaluru_Fluoride_SensorData_500 (3).xlsx")
 MODEL_DIR = os.path.join(BASE_DIR, "model")
 MODEL_PATH = os.path.join(MODEL_DIR, "fluoride_model.pkl")
 

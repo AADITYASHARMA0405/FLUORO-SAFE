@@ -58,18 +58,19 @@ The web interface allows users to input water parameters, receive instant fluori
 FLUORIDE-PROJECT/
 ├── app.py                          # Flask application with API endpoints
 ├── requirements.txt                # Python dependencies
+├── data/
+│   └── Bengaluru_Fluoride_SensorData_500.xlsx  # Sensor dataset
 ├── model/
 │   ├── train.py                    # ML training pipeline (10+ models)
 │   ├── fluoride_model.pkl          # Trained model artifact
 │   └── results_summary.pkl         # Model comparison results
 ├── templates/
 │   └── index.html                  # Main UI template
-├── static/
-│   ├── css/
-│   │   └── style.css               # Styles and animations
-│   └── js/
-│       └── app.js                  # Frontend logic and charts
-└── Bengaluru_Fluoride_SensorData_500 (3).xlsx  # Sensor dataset
+└── static/
+    ├── css/
+    │   └── style.css               # Styles and animations
+    └── js/
+        └── app.js                  # Frontend logic and charts
 ```
 
 ---
