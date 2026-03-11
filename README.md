@@ -20,9 +20,9 @@ A full-stack web application that predicts fluoride concentration in drinking wa
 
 ## Overview
 
-Excess fluoride in drinking water is a global health concern affecting millions. FluoroSafe uses real sensor data to train machine learning models that predict fluoride levels based on four water quality parameters: pH, Electrical Conductivity (EC), Temperature, and Hardness.
+Excess fluoride in drinking water is a global health concern affecting millions. Traditional laboratory testing for fluoride is costly and inaccessible in many regions. FluoroSafe provides a **free, instant alternative** by using machine learning models trained on real sensor data to predict fluoride levels from four basic water quality parameters: pH, Electrical Conductivity (EC), Temperature, and Hardness.
 
-The web interface allows users to input water parameters, receive instant fluoride predictions, and access educational content about fluoride safety.
+The web interface allows users to input water parameters, receive instant fluoride estimates, and access educational content about fluoride safety — making water quality assessment accessible to everyone.
 
 ---
 
